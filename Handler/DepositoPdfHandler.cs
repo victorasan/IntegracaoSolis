@@ -1,14 +1,21 @@
-﻿using IntegracaoSolis.Interface;
+﻿using IntegracaoSolis.Command;
+using IntegracaoSolis.Interface;
+using Newtonsoft.Json;
 using System.Text;
+using static IntegracaoSolis.DTO.UploadPdfDTO;
+
 namespace IntegracaoSolis.Handler
+
 {
     public class DepositoPdfHandler : IDepositoPdf
     {
         private readonly IConfiguration _configuration;
+        private readonly IUploadCommand _uploadCommand;
 
-        public DepositoPdfHandler(IConfiguration configuration)
+        public DepositoPdfHandler(IConfiguration configuration, IUploadCommand uploadCommand)
         {
             _configuration = configuration;
+            _uploadCommand = uploadCommand;
         }
         public async Task<bool> DepositoPdf()
         {
@@ -25,23 +32,27 @@ namespace IntegracaoSolis.Handler
                     {
                     new
                     {
-                        issueDate = "2023-01-02T18:02:33.142Z",
-                        documentNumber = "7001147312",
-                        takerVatNumber = "71347739653",
+                        issueDate = "2023-01-09T16:22:33.142Z",
+                        documentNumber = "7001187209",
+                        takerVatNumber = "08189147773",
                         documentBankCreditNoteId = "6fbb9724-5c7e-4f73-0a37-08dc00c6db2c",
-                        value = 16.992
+                        value = 2693.83
                     }
                 }
                 };
 
                 var requestBodyJson = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
                 var content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
+                var caminhoPdf = Convert.ToString(_configuration.GetSection("CaminhoPdf").Value)!;
+                var ccbDepositada = Convert.ToString(_configuration.GetSection("ccbDepositada").Value)!;
+
+                var pdfFiles = Directory.GetFiles(caminhoPdf, "*.pdf");
 
                 try
                 {
                     using HttpClient client = new HttpClient();
 
-                    client.DefaultRequestHeaders.Add("text/plain", Accept);
+                    client.DefaultRequestHeaders.Add("Accept", Accept);
                     client.DefaultRequestHeaders.Add("x-api-token", authToken);
 
                     HttpResponseMessage response = await client.PostAsync(apiUrl, content);
@@ -49,7 +60,11 @@ namespace IntegracaoSolis.Handler
 
                     if (response.IsSuccessStatusCode)
                     {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        ResponseDTO ResponseDTO = JsonConvert.DeserializeObject<ResponseDTO>(responseBody);
 
+                        //File.Delete("*.pdf");
+                        await _uploadCommand.UpdateDepositoCCB(ResponseDTO);
                         return true;
                     }
                     else

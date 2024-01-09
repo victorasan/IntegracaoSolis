@@ -8,9 +8,15 @@ namespace IntegracaoSolis.Command
     public class UploadCommand : IUploadCommand
     {
 
-       public async Task<bool> UploadPDFCommand(ResponseDTO response)
+        private readonly IConfiguration _configuration;
+
+        public UploadCommand(IConfiguration configuration)
         {
-            var connectionString = "Server=localhost;Port=5432;Database=SolisIntegration;User Id=postgres;Password=changeme;";
+            _configuration = configuration;
+        }
+        public async Task<bool> UploadPDFCommand(ResponseDTO response)
+        {
+            var connectionString = Convert.ToString(_configuration.GetSection("SQLCONNSTR").Value);
 
             try
             {
@@ -45,26 +51,15 @@ namespace IntegracaoSolis.Command
 
         public async Task<bool> UpdateDepositoCCB(ResponseDTO response)
         {
-            var connectionString = "Server=localhost;Port=5432;Database=SolisIntegration;User Id=postgres;Password=changeme;";
+            var connectionString = Convert.ToString(_configuration.GetSection("SQLCONNSTR").Value);
 
             try
             {
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
-                    string sql = "INSERT INTO upload_pdf (id,clientId, url, urlNonTradable,urlEndorsement,urlSigned,fileName,createdAt,version,status,id_ccb, depositada) VALUES (@id,@clientId, @url, @urlNonTradable,@urlEndorsement,@urlSigned,@fileName,@createdAt,@version,@status,@id_ccb, @depositada)";
+                    string sql = "Update upload_pdf set depositada = @depositada";
                     await connection.ExecuteAsync(sql, new
                     {
-                        id = Guid.NewGuid(),
-                        clientId = response.clientId,
-                        url = response.url,
-                        urlNonTradable = response.urlNonTradable,
-                        urlEndorsement = response.urlEndorsement,
-                        urlSigned = response.urlSigned,
-                        fileName = response.fileName,
-                        createdAt = Convert.ToDateTime(response.createdAt),
-                        version = response.version,
-                        status = response.status,
-                        id_ccb = response.id,
                         depositada = true
                     });
                 }
