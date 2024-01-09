@@ -43,10 +43,6 @@ namespace IntegracaoSolis.Handler
 
                 var requestBodyJson = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody);
                 var content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
-                var caminhoPdf = Convert.ToString(_configuration.GetSection("CaminhoPdf").Value)!;
-                var ccbDepositada = Convert.ToString(_configuration.GetSection("ccbDepositada").Value)!;
-
-                var pdfFiles = Directory.GetFiles(caminhoPdf, "*.pdf");
 
                 try
                 {
