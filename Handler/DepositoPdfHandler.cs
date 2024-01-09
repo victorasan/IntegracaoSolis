@@ -4,16 +4,19 @@ namespace IntegracaoSolis.Handler
 {
     public class DepositoPdfHandler : IDepositoPdf
     {
-        
+        private readonly IConfiguration _configuration;
+
+        public DepositoPdfHandler(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<bool> DepositoPdf()
         {
             {
-                // URL da API externa
-                string apiUrl = "https://api.sandbox.hermescertifica.com.br/api/bank-credit-note/deposit";
-                string authToken = "4D33D29D71B9821C1011A36FA407834D33FE9674F5FC431F628DBA5BDF07F5B2";
-                string Accept = "text/plain";
+                var apiUrl = Convert.ToString(_configuration.GetSection("UrlDeposito").Value);
+                var authToken = Convert.ToString(_configuration.GetSection("authToken").Value);
+                var Accept = Convert.ToString(_configuration.GetSection("Accept").Value);
 
-                // Criar o corpo da requisição
                 var requestBody = new
                 {
                     sendToSignature = false,

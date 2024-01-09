@@ -6,6 +6,12 @@ using IntegracaoSolis.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var config = new ConfigurationBuilder()
+           .SetBasePath(Directory.GetCurrentDirectory())
+           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+IConfigurationRoot configuration = config.Build();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -15,7 +21,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IIntegracaoSolis, IntegracaoSolisHandler>();
 builder.Services.AddScoped<IUploadCommand, UploadCommand>();
 builder.Services.AddScoped<IDepositoPdf, DepositoPdfHandler>();
-builder.Services.AddHangfire(x => x.UsePostgreSqlStorage("Server=localhost;Port=5432;Database=SolisIntegration;User Id=postgres;Password=changeme;"));
+builder.Services.AddHangfireServer();
+
+builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(Convert.ToString(configuration.GetSection("SQLCONNSTR").Value)));
 
 var app = builder.Build();
 
@@ -32,7 +40,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseHangfireServer();
+
 
 app.UseHangfireDashboard();
 

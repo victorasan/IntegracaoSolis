@@ -35,15 +35,15 @@ namespace IntegracaoSolis.Controllers
             
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("ccbDepositadas")]
         public IActionResult DepositoCCB()
         {
             _depositoPdf.DepositoPdf();
-            return Ok();
+            return Ok("Depósito de CCB realizado");
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("envioRemessa")]
         public IActionResult EnvioRemessa()
         {

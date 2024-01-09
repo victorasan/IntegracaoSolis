@@ -11,19 +11,23 @@ namespace IntegracaoSolis.Handler
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http.HttpResults;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
 
     public class IntegracaoSolisHandler : IIntegracaoSolis
     {
         public readonly IUploadCommand _uploadCommand ;
-        public IntegracaoSolisHandler(IUploadCommand uploadCommand)
+        public readonly IConfiguration _configuration ;
+        public IntegracaoSolisHandler(IUploadCommand uploadCommand, IConfiguration configuration)
         {
-            _uploadCommand = uploadCommand ;
+            _uploadCommand = uploadCommand;
+            _configuration = configuration;
         }
         public async Task<IActionResult> uploadPdf()
         {
-            var caminhoPdf = "C:\\Users\\VictorAlvesdosSantos\\OneDrive - RGICA SERVICOS TECNOLOGICOS E FINANCEIROS LTDA\\Documents\\CCB";
-            var ccbDepositada = "C:\\Users\\VictorAlvesdosSantos\\OneDrive - RGICA SERVICOS TECNOLOGICOS E FINANCEIROS LTDA\\Documents\\CCB\\Depositada";
+            var caminhoPdf = Convert.ToString(_configuration.GetSection("CaminhoPdf").Value)!;
+            var ccbDepositada = Convert.ToString(_configuration.GetSection("ccbDepositada").Value)!;
+
             var pdfFiles = Directory.GetFiles(caminhoPdf, "*.pdf");
 
             try
@@ -56,12 +60,12 @@ namespace IntegracaoSolis.Handler
             }
         }        
 
-        static async Task<ResponseDTO> SendPdfToApi(string filePath)
+        public async Task<ResponseDTO> SendPdfToApi(string filePath)
         {
             try
             {
-                string apiUrl = "https://api.sandbox.hermescertifica.com.br/api/bank-credit-note/upload-bankcreditnote";
-                string authToken = "4D33D29D71B9821C1011A36FA407834D33FE9674F5FC431F628DBA5BDF07F5B2";
+                var apiUrl = Convert.ToString(_configuration.GetSection("UrlUpload").Value);
+                var authToken = Convert.ToString(_configuration.GetSection("authToken").Value);
 
                 using (HttpClient client = new HttpClient())
                 using (var formData = new MultipartFormDataContent())
