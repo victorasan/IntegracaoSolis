@@ -24,19 +24,21 @@ namespace IntegracaoSolis.Handler
                 var authToken = Convert.ToString(_configuration.GetSection("authToken").Value);
                 var Accept = Convert.ToString(_configuration.GetSection("Accept").Value);
 
+                
+                
                 var requestBody = new
                 {
                     sendToSignature = false,
-                    batchName = "teste",
+                    batchName = "C01SoliSiape08122023",
                     bankCreditNotes = new[]
                     {
                     new
                     {
-                        issueDate = "2023-01-09T16:22:33.142Z",
-                        documentNumber = "7001187209",
-                        takerVatNumber = "08189147773",
-                        documentBankCreditNoteId = "6fbb9724-5c7e-4f73-0a37-08dc00c6db2c",
-                        value = 2693.83
+                        issueDate = "2023-12-08T16:22:33.142Z", //data da emissão da CCB
+                        documentNumber = "7000889293",
+                        takerVatNumber = "17004802272",
+                        documentBankCreditNoteId = "a73f2798-1d87-4d25-0a38-08dc00c6db2c",
+                        value = 4326.01
                     }
                 }
                 };

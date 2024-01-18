@@ -21,6 +21,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IIntegracaoSolis, IntegracaoSolisHandler>();
 builder.Services.AddScoped<IUploadCommand, UploadCommand>();
 builder.Services.AddScoped<IDepositoPdf, DepositoPdfHandler>();
+builder.Services.AddScoped<IEnvioRemessa, EnvioRemessaHandler>();
+builder.Services.AddScoped<IImportarArquivo, ImportarArquivoHandler>();
+
 builder.Services.AddHangfireServer();
 
 builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(Convert.ToString(configuration.GetSection("SQLCONNSTR").Value)));
@@ -39,8 +42,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-
 
 app.UseHangfireDashboard();
 

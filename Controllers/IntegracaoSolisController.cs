@@ -11,12 +11,16 @@ namespace IntegracaoSolis.Controllers
         private readonly ILogger<IntegracaoSolisController> _logger;
         private readonly IIntegracaoSolis _integracaoSolis;
         private readonly IDepositoPdf _depositoPdf;
+        private readonly IEnvioRemessa _envioRemessa;
+        private readonly IImportarArquivo _importarArquivo;
 
-        public IntegracaoSolisController(ILogger<IntegracaoSolisController> logger, IIntegracaoSolis integracaoSolis, IDepositoPdf depositoPdf)
+        public IntegracaoSolisController(ILogger<IntegracaoSolisController> logger, IIntegracaoSolis integracaoSolis, IDepositoPdf depositoPdf, IEnvioRemessa envioRemessa, IImportarArquivo importarArquivo)
         {
             _logger = logger;
             _integracaoSolis = integracaoSolis;
             _depositoPdf = depositoPdf;
+            _envioRemessa = envioRemessa;
+            _importarArquivo = importarArquivo;
         }
 
         [HttpPost]
@@ -47,7 +51,23 @@ namespace IntegracaoSolis.Controllers
         [Route("envioRemessa")]
         public IActionResult EnvioRemessa()
         {
+            _envioRemessa.EnvioRemessa();
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("importarArquivo")]
+        public IActionResult ImportarArquivo()
+        {
+            var arquivo = _importarArquivo.ImportarArquivo();
+
+            if (arquivo)
+            {
+                return Ok("Arquivo importado!");
+            }
+
+            return BadRequest("Erro ao importar");
+            
         }
     }
 }
