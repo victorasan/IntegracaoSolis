@@ -87,10 +87,13 @@ namespace IntegracaoSolis.Handler
              ),
              new XElement("CNPJCustodiante", "39.669.186/0001-01"),
              new XElement("CNPJOriginador", "43.299.408/0001-19"),
-             new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36");
-             var instrucoes = new XElement("Instrucoes",
-                    new XElement("Aquisicoes",
-                        new XElement("Aquisicao")));
+             new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36"));
+            var instrucoes = new XElement("Instrucoes");
+
+
+            var aquisicoes = new XElement("Aquisicoes");
+
+            var aquisicao = new XElement("Aquisicao");
 
             var cedente = new XElement("Cedente",
                                 new XElement("TipoPessoaMF", "J"),
@@ -156,7 +159,9 @@ namespace IntegracaoSolis.Handler
                 titulos.Add(titulo);
             }
              cedente.Add(titulos);
-             instrucoes.Add(cedente);
+             aquisicao.Add(cedente);
+             aquisicoes.Add(aquisicao);
+             instrucoes.Add(aquisicoes);
              remessa.Add(instrucoes);
 
             var totalTotal = result.Sum(x => x.valor_parcela);
