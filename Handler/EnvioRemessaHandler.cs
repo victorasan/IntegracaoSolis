@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using IntegracaoSolis.DTO;
 using IntegracaoSolis.Interface;
 using Newtonsoft.Json;
@@ -99,95 +99,79 @@ namespace IntegracaoSolis.Handler
                                 new XElement("Titulos"
                                     ))))));
 
-            var cpf = "";
-
             foreach (var item in result)
             {
-                if (cpf == "" || cpf != item.cnpj_cpf)
-                {
+
+                var dadosTitulos = result.Where(x => x.cnpj_cpf == item.cnpj_cpf);
+                var total = dadosTitulos.Sum(x => x.valor_parcela);
+
+
                     var titulos = new XElement("Titulo",
                     new XElement("Sacado",
                     new XElement("TipoPessoaMF", "F"),
                     new XElement("CPFCNPJ", item.cnpj_cpf),
                     new XElement("Nome", item.nome_sacado),
                     new XElement("Endereco",
-                    new XElement("CEP", item.cep),
-                    new XElement("Logradouro", item.rua),
-                    new XElement("Numero", item.rua),
-                    new XElement("Complemento"),
-                    new XElement("Bairro", item.bairro),
-                    new XElement("Municipio", item.cidade),
-                    new XElement("UF", item.uf)),
-                    new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36")));
+                        new XElement("CEP", item.cep),
+                        new XElement("Logradouro", item.rua),
+                        new XElement("Numero", item.rua),
+                        new XElement("Complemento"),
+                        new XElement("Bairro", item.bairro),
+                        new XElement("Municipio", item.cidade),
+                        new XElement("UF", item.uf)
+                    ),
+                    new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36")),
+                    new XElement("DadosTitulos",
+                        new XElement("TipoAtivo", "04"),
+                        new XElement("NumeroBoletoBanco", item.chave),
+                        new XElement("NumeroControleParticipante", item.chave),
+                        new XElement("StatusAtivo", "01"),
+                        new XElement("NumeroDocumento", item.numero_documento),
+                        new XElement("DataEmissao", item.vencimento),
+                        new XElement("DataAquisicao", item.vencimento),
+                        new XElement("DataVencimento", item.vencimento),
+                        new XElement("ValorPresente", item.valor_parcela),
+                        new XElement("ValorNominal", total),
+                        new XElement("Especie", "04"),
+                        new XElement("TipoOperacao", "01"),
+                        new XElement("TaxaPre", "0.000"),
+                        new XElement("TaxaMultaBoleto", "000.00"),
+                        new XElement("MoraDiaria", "000.00"),
+                        new XElement("RegistroCobranca", "N")
+                    ),
+                    new XElement(  "Lastros",
+						new XElement("ValorTotalLastros", total),
+						new XElement("Lastro",
+                            new XElement("Documento",
+                                new XElement("TipoDocumento", "03")
+                                new XElement("LastroId", item.chave)
+                                new XElement("NumeroDocumento", item.numero_documento)
+                                new XElement("ChaveDocumento", item.chave)
+                                new XElement("ValorTotalDocumento", total)
+                                new XElement("NSU")
+                            )
+                        )
+                    )
 
-                    var dadosTitulos = result.Where(x => x.cnpj_cpf == item.cnpj_cpf);
-
-                    var total = dadosTitulos.Sum(x => x.valor_parcela);
-
-                    foreach (var titulo in dadosTitulos)
-                    {
-                        var dadosTitulo = new XElement("DadosTitulos",
-                                              new XElement("TipoAtivo", "04"),
-                                              new XElement("NumeroBoletoBanco", titulo.chave),
-                                              new XElement("NumeroControleParticipante", titulo.chave),
-                                              new XElement("StatusAtivo", "01"),
-                                              new XElement("NumeroDocumento", titulo.numero_documento),
-                                              new XElement("DataEmissao", titulo.vencimento),
-                                              new XElement("DataAquisicao", titulo.vencimento),
-                                              new XElement("DataVencimento", titulo.vencimento),
-                                              new XElement("ValorPresente", titulo.valor_parcela),
-                                              new XElement("ValorNominal", total),
-                                              new XElement("Especie", "04"),
-                                              new XElement("TipoOperacao", "01"),
-                                              new XElement("TaxaPre", "0.000"),
-                                              new XElement("TaxaMultaBoleto", "000.00"),
-                                              new XElement("MoraDiaria", "000.00"),
-                                              new XElement("RegistroCobranca", "N")
-                                          );
-                        titulos.Add(dadosTitulo);
-                    }
 
                     remessa.Add(titulos);
                 }
-                
-                cpf = item.cnpj_cpf;
-
             };
-           
-                                          
-            //                               new XElement("Lastros",
-            //                                   new XElement("ValorTotalLastros", "176.68"),
-            //                                   new XElement("Lastro",
-            //                                       new XElement("Documento",
-            //                                          new XElement("TipoDocumento", "03"),
-            //                                           new XElement("LastroId", "7000889293001"),
-            //                                           new XElement("NumeroDocumento", "7000889293"),
-            //                                           new XElement("ChaveDocumento", "7000889293001"),
-            //                                           new XElement("ValorTotalDocumento", "176.68"),
-            //                                           new XElement("NSU")
-            //                                       )
-            //                                   )
-            //                               )
-            //                           )
-            //                       )
-            //                   )
-            //               )
-            //           )
-            //       );
-            //   };
 
-            //    new XElement("Pagamentos",
-            //        new XElement("PagamentoCessao",
-            //            new XElement("CPFCNPJ", "43.299.408/0001-19"),
-            //            new XElement("CodigoBanco", "033"),
-            //            new XElement("CodigoAgencia", "205"),
-            //            new XElement("dvAgencia", "0"),
-            //            new XElement("Conta", "00013005842"),
-            //            new XElement("dvConta", "6"),
-            //            new XElement("ValorTransacao", "176.68")
-            //        )
-            //    )
-            //);
+            var totalTotal = result.Sum(x => x.valor_parcela);
+            var pagamentos = new XElement("Pagamentos",
+                new XElement("PagamentoCessao",
+                    new XElement("CPFCNPJ", "43.299.408/0001-19"),
+                    new XElement("CodigoBanco", "033"),
+                    new XElement("CodigoAgencia", "205"),
+                    new XElement("dvAgencia", "0"),
+                    new XElement("Conta", "00013005842"),
+                    new XElement("dvConta", "6"),
+                    new XElement("ValorTransacao", totalTotal)
+                )
+            );
+
+            remessa.Add(pagamentos);
 
             remessa.Save("C:\\Arquivo\\Remessa.xml");
 
