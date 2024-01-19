@@ -87,17 +87,18 @@ namespace IntegracaoSolis.Handler
              ),
              new XElement("CNPJCustodiante", "39.669.186/0001-01"),
              new XElement("CNPJOriginador", "43.299.408/0001-19"),
-             new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36"),
-             new XElement("Instrucoes",
+             new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36");
+             var instrucoes = new XElement("Instrucoes",
                     new XElement("Aquisicoes",
-                        new XElement("Aquisicao",
-                            new XElement("Cedente",
+                        new XElement("Aquisicao")));
+
+            var cedente = new XElement("Cedente",
                                 new XElement("TipoPessoaMF", "J"),
                                 new XElement("CPFCNPJ", "43.299.408/0001-19"),
                                 new XElement("Nome", "MEUCASHCARD SERVIÇOS TECNOLOGICOS E FINANCEIROS LTDA"),
-                                new XElement("Coobrigacao", "01"),
-                                new XElement("Titulos"
-                                    ))))));
+                                new XElement("Coobrigacao", "01"));
+
+            var titulos = new XElement("Titulos");
 
             foreach (var item in result)
             {
@@ -106,7 +107,7 @@ namespace IntegracaoSolis.Handler
                 var total = dadosTitulos.Sum(x => x.valor_parcela);
 
 
-                var titulos = new XElement("Titulo",
+                var titulo = new XElement("Titulo",
                 new XElement("Sacado",
                 new XElement("TipoPessoaMF", "F"),
                 new XElement("CPFCNPJ", item.cnpj_cpf),
@@ -152,11 +153,11 @@ namespace IntegracaoSolis.Handler
                         )
                     )
                 ));
-
-
-                    remessa.Add(titulos);
+                titulos.Add(titulo);
             }
-            
+             cedente.Add(titulos);
+             instrucoes.Add(cedente);
+             remessa.Add(instrucoes);
 
             var totalTotal = result.Sum(x => x.valor_parcela);
             var pagamentos = new XElement("Pagamentos",
