@@ -17,6 +17,8 @@ namespace IntegracaoSolis.DTO
         public string? uf { get; set; }
         public string? telefone { get; set; }
         public string? chave { get; set; }
+        public DateTime? data_emissao { get; set; }
+        public int proposta { get; set; }
         public bool remessa { get; set; }
 
     }

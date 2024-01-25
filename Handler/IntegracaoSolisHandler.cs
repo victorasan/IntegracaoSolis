@@ -8,9 +8,7 @@ namespace IntegracaoSolis.Handler
     using System.IO;
     using System.Linq;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http.HttpResults;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
 
@@ -51,7 +49,7 @@ namespace IntegracaoSolis.Handler
                         }
                     }                    
                 }
-                return null;
+                return null; 
             }
             catch (Exception e)
             {

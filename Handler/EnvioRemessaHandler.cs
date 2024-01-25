@@ -29,7 +29,7 @@ namespace IntegracaoSolis.Handler
 
                 var requestData = new
                 {
-                    handshake = "55666D9A-36DA-4E6E-8",
+                    handshake = _configuration.GetSection("HandShake").Value,
                     remessaXml = xmlDoc
                 };
 

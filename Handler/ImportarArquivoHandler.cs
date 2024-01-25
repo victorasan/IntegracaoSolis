@@ -47,7 +47,7 @@ namespace IntegracaoSolis.Handler
                         var values = line.Split(';');
 
                         // Criar a instrução de inserção
-                        var insertQuery = $"INSERT INTO {tableName} (id, cnpj_cpf, vencimento, valor_parcela, numero_documento, nome_sacado, rua, bairro, cep, cidade, uf, telefone, chave, remessa) VALUES (@id, @CNPJ_CPF, @VENCIMENTO, @VALOR_PARCELA, @NUMERO_DOCUMENTO,@NOME_SACADO, @RUA, @BAIRRO, @CEP, @CIDADE, @UF, @TELEFONE, @CHAVE, @Remessa)";
+                        var insertQuery = $"INSERT INTO {tableName} (id, cnpj_cpf, vencimento, valor_parcela, numero_documento, nome_sacado, rua, bairro, cep, cidade, uf, telefone, chave, data_emissao, proposta, remessa) VALUES (@id, @CNPJ_CPF, @VENCIMENTO, @VALOR_PARCELA, @NUMERO_DOCUMENTO,@NOME_SACADO, @RUA, @BAIRRO, @CEP, @CIDADE, @UF, @TELEFONE, @CHAVE, @data_emissao, @proposta, @Remessa)";
 
                         using var cmd = new NpgsqlCommand(insertQuery, connection);
                         cmd.Parameters.AddWithValue("id", Guid.NewGuid());
@@ -63,7 +63,9 @@ namespace IntegracaoSolis.Handler
                         cmd.Parameters.AddWithValue("UF", Convert.ToString(values[9]));
                         cmd.Parameters.AddWithValue("TELEFONE", Convert.ToString(values[10]));
                         cmd.Parameters.AddWithValue("CHAVE", Convert.ToString(values[11]));
-                        cmd.Parameters.AddWithValue("Remessa", Convert.ToBoolean(values[12]));
+                        cmd.Parameters.AddWithValue("data_emissao", Convert.ToDateTime(values[12]));
+                        cmd.Parameters.AddWithValue("proposta", Convert.ToString(values[13]));
+                        cmd.Parameters.AddWithValue("Remessa", Convert.ToBoolean(values[14]));
 
                         // Executar a instrução de inserção
                         cmd.ExecuteNonQuery();
