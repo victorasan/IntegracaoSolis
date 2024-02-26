@@ -23,7 +23,7 @@ namespace IntegracaoSolis.Handler
         }
         public async Task<IActionResult> uploadPdf()
         {
-            var caminhoPdf = Convert.ToString(_configuration.GetSection("CaminhoPdf").Value)!;
+                var caminhoPdf = Convert.ToString(_configuration.GetSection("CaminhoPdf").Value)!;
             var ccbDepositada = Convert.ToString(_configuration.GetSection("ccbDepositada").Value)!;
 
             var pdfFiles = Directory.GetFiles(caminhoPdf, "*.pdf");

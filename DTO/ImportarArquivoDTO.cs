@@ -20,6 +20,9 @@ namespace IntegracaoSolis.DTO
         public DateTime? data_emissao { get; set; }
         public int proposta { get; set; }
         public bool remessa { get; set; }
+        public decimal valor_futuro { get; set; }
+        public decimal valor_pagamento { get; set; }
+
 
     }
 }

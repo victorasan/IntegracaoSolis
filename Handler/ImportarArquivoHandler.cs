@@ -28,7 +28,7 @@ namespace IntegracaoSolis.Handler
         }
         public bool ImportarArquivo()
         {
-            string csvFilePath = Path.GetFullPath("C:\\Arquivo\\teste.csv");
+            string csvFilePath = Path.GetFullPath("C:\\Users\\VictorAlvesdosSantos\\MEUCASHCARD SERVIÇOS TECNOLOGICOS E FINANCEIROS LTDA\\Engenharia de Dados - Integracao Solis\\Arquivos\\FC00002CessaoSIAPE20022024ARQ1envio.csv");
 
             // Ler o arquivo CSV
             var csvData = File.ReadAllLines(csvFilePath);
@@ -47,7 +47,7 @@ namespace IntegracaoSolis.Handler
                         var values = line.Split(';');
 
                         // Criar a instrução de inserção
-                        var insertQuery = $"INSERT INTO {tableName} (id, cnpj_cpf, vencimento, valor_parcela, numero_documento, nome_sacado, rua, bairro, cep, cidade, uf, telefone, chave, data_emissao, proposta, remessa) VALUES (@id, @CNPJ_CPF, @VENCIMENTO, @VALOR_PARCELA, @NUMERO_DOCUMENTO,@NOME_SACADO, @RUA, @BAIRRO, @CEP, @CIDADE, @UF, @TELEFONE, @CHAVE, @data_emissao, @proposta, @Remessa)";
+                        var insertQuery = $"INSERT INTO {tableName} (id, cnpj_cpf, vencimento, valor_parcela, numero_documento, nome_sacado, rua, bairro, cep, cidade, uf, telefone, chave, data_emissao, proposta, remessa, valor_futuro, valor_pagamento) VALUES (@id, @CNPJ_CPF, @VENCIMENTO, @VALOR_PARCELA, @NUMERO_DOCUMENTO,@NOME_SACADO, @RUA, @BAIRRO, @CEP, @CIDADE, @UF, @TELEFONE, @CHAVE, @data_emissao, @proposta, @Remessa, @valor_futuro, @valor_pagamento)";
 
                         using var cmd = new NpgsqlCommand(insertQuery, connection);
                         cmd.Parameters.AddWithValue("id", Guid.NewGuid());
@@ -66,6 +66,9 @@ namespace IntegracaoSolis.Handler
                         cmd.Parameters.AddWithValue("data_emissao", Convert.ToDateTime(values[12]));
                         cmd.Parameters.AddWithValue("proposta", Convert.ToString(values[13]));
                         cmd.Parameters.AddWithValue("Remessa", Convert.ToBoolean(values[14]));
+                        cmd.Parameters.AddWithValue("valor_futuro", Convert.ToDecimal(values[15]));
+                        cmd.Parameters.AddWithValue("valor_pagamento", Convert.ToDecimal(values[16]));
+
 
                         // Executar a instrução de inserção
                         cmd.ExecuteNonQuery();
