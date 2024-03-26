@@ -102,7 +102,7 @@ namespace IntegracaoSolis.Handler
              ),
              new XElement("CNPJCustodiante", "39.669.186/0001-01"),
              new XElement("CNPJOriginador", "43.299.408/0001-19"),
-             new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36"));
+             new XElement("CNPJEmpresaConveniada", "33.683.111/0001-07"));
             var instrucoes = new XElement("Instrucoes");
 
 
@@ -143,13 +143,13 @@ namespace IntegracaoSolis.Handler
                 new XElement("Endereco",
                     new XElement("CEP", FormatarCEP(item.cep!)),
                     new XElement("Logradouro", enderecoAtt),
-                    new XElement("Numero", Regex.Replace(item.rua!, "[^0-9]", "")),
+                    new XElement("Numero", item.numero_endereco),
                     new XElement("Complemento"),
                     new XElement("Bairro", item.bairro),
                     new XElement("Municipio", item.cidade),
                     new XElement("UF", item.uf)
                 ),
-                new XElement("CNPJEmpresaConveniada", "01.094.694/0001-36")),
+                new XElement("CNPJEmpresaConveniada", "33.683.111/0001-07")),
                 new XElement("DadosTitulos",
                     new XElement("TipoAtivo", "04"),
                     new XElement("NumeroBoletoBanco", item.chave!.Substring(1,11)),
@@ -237,15 +237,12 @@ namespace IntegracaoSolis.Handler
         }
         static string FormatarCEP(string cep)
         {
-            // Verificar se o CEP é válido
             if (cep.Length == 8)
             {
-                // Adicionar a máscara de CEP
                 return $"{cep.Substring(0, 5)}-{cep.Substring(5)}";
             }
             else
             {
-                // CEP inválido, retornar o valor original
                 return cep;
             }
         }

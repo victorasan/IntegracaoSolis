@@ -57,7 +57,7 @@ namespace IntegracaoSolis.Handler
                  var requestBody = new
                 {
                     sendToSignature = false,
-                    batchName = "C02SoliSiape16022024",
+                    batchName = "SoliSiape16022024",
                     bankCreditNotes = dadosEnvio
                  };
                 

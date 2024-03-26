@@ -22,6 +22,8 @@ namespace IntegracaoSolis.DTO
         public bool remessa { get; set; }
         public decimal valor_futuro { get; set; }
         public decimal valor_pagamento { get; set; }
+        public int numero_endereco { get; set; }
+
 
 
     }

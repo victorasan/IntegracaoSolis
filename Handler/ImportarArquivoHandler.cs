@@ -47,7 +47,7 @@ namespace IntegracaoSolis.Handler
                         var values = line.Split(';');
 
                         // Criar a instrução de inserção
-                        var insertQuery = $"INSERT INTO {tableName} (id, cnpj_cpf, vencimento, valor_parcela, numero_documento, nome_sacado, rua, bairro, cep, cidade, uf, telefone, chave, data_emissao, proposta, remessa, valor_futuro, valor_pagamento) VALUES (@id, @CNPJ_CPF, @VENCIMENTO, @VALOR_PARCELA, @NUMERO_DOCUMENTO,@NOME_SACADO, @RUA, @BAIRRO, @CEP, @CIDADE, @UF, @TELEFONE, @CHAVE, @data_emissao, @proposta, @Remessa, @valor_futuro, @valor_pagamento)";
+                        var insertQuery = $"INSERT INTO {tableName} (id, cnpj_cpf, vencimento, valor_parcela, numero_documento, nome_sacado, rua, bairro, cep, cidade, uf, telefone, chave, data_emissao, proposta, remessa, valor_futuro, valor_pagamento, numero_endereco) VALUES (@id, @CNPJ_CPF, @VENCIMENTO, @VALOR_PARCELA, @NUMERO_DOCUMENTO,@NOME_SACADO, @RUA, @BAIRRO, @CEP, @CIDADE, @UF, @TELEFONE, @CHAVE, @data_emissao, @proposta, @Remessa, @valor_futuro, @valor_pagamento, @numero_endereco)";
 
                         using var cmd = new NpgsqlCommand(insertQuery, connection);
                         cmd.Parameters.AddWithValue("id", Guid.NewGuid());
@@ -68,6 +68,7 @@ namespace IntegracaoSolis.Handler
                         cmd.Parameters.AddWithValue("Remessa", Convert.ToBoolean(values[14]));
                         cmd.Parameters.AddWithValue("valor_futuro", Convert.ToDecimal(values[15]));
                         cmd.Parameters.AddWithValue("valor_pagamento", Convert.ToDecimal(values[16]));
+                        cmd.Parameters.AddWithValue("numero_endereco", Convert.ToInt64(values[17]));
 
 
                         // Executar a instrução de inserção
